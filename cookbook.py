@@ -1,20 +1,34 @@
 
 
+#Мой вариант
+# def get_shop_list_by_dishes(dishes, person_count):
+#     lc_dict2buy = {}
+#     list_ing4dish = {}
+#     loc_dict_cook_book = read_cook_book()
+#     for dish in dishes:
+#         if (dish == '' or dish == ' '):
+#             continue
+#         list_ing4dish = loc_dict_cook_book.get(str(dish))   #получен списко ингредиентов для блюда
+#         #print (list_ing4dish)
+#         for ing in list_ing4dish:
+#             if ing['ingridient_name'] not in lc_dict2buy.keys():
+#                 lc_dict2buy[ing['ingridient_name']] = {'measure': ing['measure'], 'quantity': 0}
+#             lc_dict2buy[ing['ingridient_name']]['quantity'] = lc_dict2buy[ing['ingridient_name']]['quantity'] + ( int(ing['quantity'] )) * person_count
+#     return lc_dict2buy
 
-def get_shop_list_by_dishes(dishes, person_count):
-    lc_dict2buy = {}
-    list_ing4dish = {}
-    loc_dict_cook_book = read_cook_book()
+def get_shop_list_by_dishes(dishes, person_count, cook_book):
+    shop_list = {}
     for dish in dishes:
-        if (dish == '' or dish == ' '):
-            continue
-        list_ing4dish = loc_dict_cook_book.get(str(dish))   #получен списко ингредиентов для блюда
-        #print (list_ing4dish)
-        for ing in list_ing4dish:
-            if ing['ingridient_name'] not in lc_dict2buy.keys():
-                lc_dict2buy[ing['ingridient_name']] = {'measure': ing['measure'], 'quantity': 0}
-            lc_dict2buy[ing['ingridient_name']]['quantity'] = lc_dict2buy[ing['ingridient_name']]['quantity'] + ( int(ing['quantity'] )) * person_count
-    return lc_dict2buy
+        if dish in cook_book:
+            for ingridient in cook_book[dish]:
+                new_shop_list_item = dict(ingridient)
+                #print(new_shop_list_item)
+                new_shop_list_item['quantity'] *= person_count
+                if new_shop_list_item['ingridient_name'] not in shop_list:
+                    shop_list[new_shop_list_item['ingridient_name']] = new_shop_list_item
+                else:
+                    shop_list[new_shop_list_item['ingridient_name']]['quantity'] += new_shop_list_item['quantity']
+    return shop_list
 
 
 
@@ -52,7 +66,7 @@ def read_cook_book():
                 list_ing_info = lv_ingredient_line.split('|') # раздел строки по символу
                 #print(list_ing_info)
                 dict_ing_info['ingridient_name'] = list_ing_info[0]
-                dict_ing_info['quantity'] = list_ing_info[1]
+                dict_ing_info['quantity'] = int(list_ing_info[1])
                 dict_ing_info['measure'] = list_ing_info[2]
                 list_ing4dish.append(dict_ing_info)
                 lv_ing_proc += 1
@@ -69,7 +83,11 @@ def read_cook_book_anc_calc_list():
     loc_persons_num = get_persons_num()
 
     print('Формируем список ингридиентов')
-    loc_list2buy = get_shop_list_by_dishes(loc_list_dishes, loc_persons_num)
+    cook_book = read_cook_book()
+    loc_list2buy = get_shop_list_by_dishes(loc_list_dishes, loc_persons_num, cook_book)
+    #Мой вариант
+    #loc_list2buy = get_shop_list_by_dishes(loc_list_dishes, loc_persons_num)
+
     print(loc_list2buy)
 
 print('=====Начало работы программы=====')

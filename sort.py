@@ -1,38 +1,35 @@
-with open ('./sorted/1.txt', 'r', encoding='utf-8') as file_1:
-    text_1 = file_1.readlines()
+def compile_files(files_list):
+    data = {}
 
-with open ('./sorted/2.txt', 'r', encoding='utf-8') as file_2:
-    text_2 = file_2.readlines()
+    for file in files_list:
+        link = "./sorted/"
+        file_l = link + file
+        with open(file_l, encoding="utf-8") as f:
+            file_data = f.readlines()
 
-with open ('./sorted/3.txt', 'r', encoding='utf-8') as file_3:
-    text_3 = file_3.readlines()
+            data[(str(len(file_data)))] = [file, " ".join(file_data)]
+
+    return data
 
 
-texts = [text_1, text_2, text_3]
-texts.sort(reverse=True)
+file_list = ['1.txt', '2.txt', '3.txt'] #список файлов
+data = compile_files(file_list)
 
-lines_1 = str(len(text_1))
-text_1.insert(0, '\n')
-text_1.insert(0, lines_1)
-text_1.insert(0, '\n1.txt\n')
+keys = sorted(list(data.keys())) #сортировка по ключей
 
-lines_2 = str(len(text_2))
-text_2.insert(0, '\n')
-text_2.insert(0, lines_2)
-text_2.insert(0, '\n2.txt\n')
+for key in data:                 #добавление количества строк в словарь
+    data[key].insert(1, key)
 
-lines_3 = str(len(text_3))
-text_3.insert(0, '\n')
-text_3.insert(0, lines_3)
-text_3.insert(0, '\n3.txt\n')
+#print(data)
 
-#print (texts)
 
-with open ('./sorted/sorted.txt', 'w', encoding='utf-8' ) as f:
-    for x in texts:
-        f.writelines(x)
+with open ('./sorted/sorted.txt', 'w', encoding='utf-8') as f:
+    for x in keys:
+        data[x]
+        for y in data[x]:
+            f.write(y + '\n')
 
 with open ('./sorted/sorted.txt', 'r', encoding='utf-8') as f:
-    file_sort = f.read()
+     file_sort = f.read()
 
 print(file_sort)
